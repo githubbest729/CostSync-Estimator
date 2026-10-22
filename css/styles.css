@@ -35,6 +35,6 @@ tr:not(.t):hover td{background:var(--soft)}
 .b-High{--bc:#c81e3a}.b-Medium,.b-Open{--bc:#b45309}.b-Low,.b-Milestone{--bc:#5d6963}.b-Answered{--bc:#0369a1}.b-Closed,.b-Signoff{--bc:#047857}.b-Estimating{--bc:#0b6e5f}.b-TQ{--bc:#0e7490}.b-Scopedeviation{--bc:#6d28d9}.b-Clientrequirement{--bc:#1d4ed8}
 button.bdg{cursor:pointer;color:var(--bc);background:color-mix(in srgb,var(--bc) 16%,transparent)}
 @media(prefers-color-scheme:dark){:root:not([data-theme=light]) .bdg{filter:brightness(1.7)}}:root[data-theme=dark] .bdg{filter:brightness(1.7)}
-.sum{top:16px;will-change:transform;transform:translateZ(0);contain:layout paint;max-height:calc(100vh - 32px);overflow:auto;align-self:start}
-.sum .legend{min-height:44px;align-content:flex-start}.sum #gsub{display:inline-block;min-width:1px}
-@media(max-width:860px){.sum{position:static;max-height:none;overflow:visible;will-change:auto;transform:none;contain:none}}
+.sum{top:16px;z-index:20;padding:10px 14px;margin-bottom:12px}
+.sum .legend{min-height:44px;align-content:flex-start}
+@media(max-width:860px){.sum{position:static}}
