@@ -38,3 +38,6 @@ button.bdg{cursor:pointer;color:var(--bc);background:color-mix(in srgb,var(--bc)
 .sum{top:16px;z-index:20;padding:10px 14px;margin-bottom:12px}
 .sum .legend{min-height:44px;align-content:flex-start}
 @media(max-width:860px){.sum{position:static}}
+#v-est>div:nth-child(2){align-self:flex-start!important;position:relative!important}
+.sum{position:sticky!important;top:16px!important;z-index:100!important;will-change:transform;transform:translateZ(0)}
+@media(max-width:860px){.sum{position:static!important;will-change:auto;transform:none}#v-est>div:nth-child(2){align-self:stretch!important}}
