@@ -1,4 +1,4 @@
-const V='v6',STATIC='costsync-static-'+V,DYN='costsync-dynamic-'+V;
+const V='v7',STATIC='costsync-static-'+V,DYN='costsync-dynamic-'+V;
 const CORE=['./','index.html','offline.html','css/styles.css','js/app.js','js/db.js','manifest.webmanifest','favicon.svg','icons/icon-192.png','icons/icon-512.png','icons/apple-touch-icon.png'];
 self.addEventListener('install',e=>e.waitUntil(caches.open(STATIC).then(c=>c.addAll(CORE))));
 self.addEventListener('message',e=>{if(e.data==='SKIP')self.skipWaiting()});
