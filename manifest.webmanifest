@@ -81,5 +81,21 @@
       "name": "Rate Cards",
       "url": "./index.html#rates"
     }
+  ],
+  "screenshots": [
+    {
+      "src": "screenshots/wide.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Estimate view"
+    },
+    {
+      "src": "screenshots/narrow.png",
+      "sizes": "540x960",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Estimate view on mobile"
+    }
   ]
 }

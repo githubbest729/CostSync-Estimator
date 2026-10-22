@@ -1,5 +1,5 @@
 const CS={db:null,
-open(){return new Promise((res,rej)=>{const q=indexedDB.open('CostSyncDB',2);q.onupgradeneeded=()=>{const d=q.result,t=q.transaction;
+open(){return new Promise((res,rej)=>{const q=indexedDB.open('CostSyncDB',3);q.onupgradeneeded=()=>{const d=q.result,t=q.transaction;
 const mk=(n,o,ix)=>{const s=d.objectStoreNames.contains(n)?t.objectStore(n):d.createObjectStore(n,o);ix.forEach(i=>{if(!s.indexNames.contains(i))s.createIndex(i,i)})};
 mk('projects',{keyPath:'projectId'},['client','status','updatedAt','uaeEmirate']);
 mk('revisions',{keyPath:'id',autoIncrement:true},['projectId','revisionNumber','timestamp']);
@@ -11,12 +11,16 @@ all(s){return new Promise(r=>{const q=CS.db.transaction(s).objectStore(s).getAll
 put(s,o){return new Promise((res,rej)=>{const t=CS.db.transaction(s,'readwrite'),q=t.objectStore(s).put(o);t.oncomplete=()=>res(q.result);t.onerror=()=>rej(t.error)})},
 del(s,k){return new Promise((res,rej)=>{const t=CS.db.transaction(s,'readwrite');t.objectStore(s).delete(k);t.oncomplete=()=>res();t.onerror=()=>rej(t.error)})},
 audit(action,detail){return CS.put('audit_trail',{timestamp:Date.now(),action,detail})},
-async init(){await CS.open();if(!(await CS.all('rate_cards')).length)await CS.seed()},
+async ensure(){const tn=['500','1,000','2,500','5,000','10,000','50,000','Unlimited'],tp=[18000,32000,62000,105000,180000,145000,210000],D=[];
+tn.forEach((n,i)=>D.push({id:'sw'+i,kind:'sw',idx:i,name:'Standalone InTouch runtime, '+n+' tags',value:tp[i]}));
+['Control room workstation','Server (rack)','Managed industrial switch','Industrial firewall','Fibre patch panel','UPS 3 kVA'].forEach((n,i)=>D.push({id:'hw'+i,kind:'hw',idx:i,name:n,value:[9500,32000,6800,11500,2400,5200][i]}));
+D.push({id:'rate',kind:'labour',idx:0,name:'Senior SCADA engineer',value:260},{id:'rate_pm',kind:'labour',idx:0,name:'Project manager / lead',value:320},{id:'rate_cad',kind:'labour',idx:0,name:'CAD / documentation / junior engineer',value:165},
+{id:'x_spm',kind:'mult',idx:0,name:'System Platform multiplier over InTouch',value:1.35},{id:'x_dev',kind:'lic',idx:0,name:'Development Studio licence',value:24000},{id:'x_drv',kind:'lic',idx:0,name:'Third-party OPC / specialty driver',value:6500},{id:'x_thin',kind:'lic',idx:0,name:'Thin / RDS / web client',value:3800},{id:'x_sql',kind:'lic',idx:0,name:'SQL Server Standard + CALs',value:17800},{id:'x_hist1',kind:'lic',idx:0,name:'AVEVA Historian Standard',value:42000},{id:'x_hist2',kind:'lic',idx:0,name:'AVEVA Historian Enterprise',value:85000});
+const have=new Map((await CS.all('rate_cards')).map(c=>[c.id,c]));for(const x of D)if(!have.has(x.id))await CS.put('rate_cards',x);
+for(const [id,o] of [['sw5',520000],['sw6',900000]]){const c=have.get(id);if(c&&c.value===o){c.value=D.find(x=>x.id===id).value;await CS.put('rate_cards',c)}}},
+async init(){await CS.open();if(!(await CS.all('projects')).length)await CS.seed();await CS.ensure()},
 async seed(){const now=Date.now(),day=864e5;
-const tn=['500 tags','1,000 tags','2,500 tags','5,000 tags','10,000 tags','50,000 tags','Unlimited tags'],tp=[18000,32000,62000,105000,180000,520000,900000];
-tn.forEach((n,i)=>CS.put('rate_cards',{id:'sw'+i,kind:'sw',idx:i,name:'Wonderware runtime licence, '+n,value:tp[i]}));
-['Control room workstation','Server (rack)','Managed industrial switch','Industrial firewall','Fibre patch panel','UPS 3 kVA'].forEach((n,i)=>CS.put('rate_cards',{id:'hw'+i,kind:'hw',idx:i,name:n,value:[9500,32000,6800,11500,2400,5200][i]}));
-await CS.put('rate_cards',{id:'rate',kind:'labour',idx:0,name:'Engineering hourly rate',value:260});
+await CS.ensure();
 const base={site:'0',spare:'20',gl:'20',gm:'12',gh:'4',alm:'900',mk:'15',sch:'0',leg:'0'};
 const P=[['AGAC-S-001','SAMPLE Dubai district cooling SCADA upgrade','Sample Utility A','Dubai',{site:'0.06',di:'600',ai:'260',soft:'2200',calc:'300',plat:'sp',hist:'2',red:'2',cl:'10',plc:'12',drv:'4',scr:'3',rep:'10',ws:'4',srv:'2',sw:'8',fw:'2',leg:'0.03'}],
 ['AGAC-S-002','SAMPLE Abu Dhabi wastewater pumping stations','Sample Authority B','Abu Dhabi',{di:'420',ai:'180',soft:'900',calc:'120',plat:'sp',hist:'1',red:'2',cl:'6',plc:'9',drv:'3',scr:'2',rep:'6',ws:'3',srv:'2',sw:'6',fw:'2',sch:'0.04'}],

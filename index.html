@@ -10,6 +10,8 @@
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="icon" href="icons/favicon-32x32.png" sizes="32x32">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <link rel="stylesheet" href="css/styles.css">
 </head><body>
 <header><h1>CostSync Estimator<small>Wonderware SCADA requirements to cost · Al Gurg Automation and Controls</small></h1>
@@ -36,7 +38,7 @@
 <label>HMI displays Medium<input type="number" id="gm" value="12" min="0"></label>
 <label>HMI displays High<input type="number" id="gh" value="4" min="0"></label>
 <label>Alarms<input type="number" id="alm" value="900" min="0"></label>
-</div></section>
+</div><p class="fpill mono" id="fpill"></p></section>
 <section><h2>Architecture and integration</h2><div class="g">
 <label>Platform<select id="plat"><option value="sp">System Platform</option><option value="it">InTouch HMI</option></select></label>
 <label>Historian<select id="hist"><option value="0">None</option><option value="1">Standard</option><option value="2">Enterprise</option></select></label>
@@ -52,20 +54,25 @@
 <label>Firewalls<input type="number" id="fw" value="2" min="0"></label>
 </div></section>
 <section><h2>Commercial and risk</h2><div class="g">
-<label>Hourly rate (AED)<input type="number" id="rate" value="260"></label>
+
 <label>Hardware markup %<input type="number" id="mk" value="15"></label>
 <label>Tight schedule<select id="sch"><option value="0">No</option><option value="0.04">Yes</option></select></label>
 <label>Legacy protocols<select id="leg"><option value="0">None</option><option value="0.03">Some</option><option value="0.06">Heavy</option></select></label>
 </div>
-<div class="row" style="margin-top:12px"><button id="save">Save revision</button><button class="s" id="csv">Export CSV</button><button class="s" id="json">Export JSON</button><button class="s" id="bk">Backup vault</button>
-<label class="s" style="flex-direction:row;align-items:center;gap:6px;cursor:pointer;color:var(--ink)">Restore<input type="file" id="imp" accept=".json" style="max-width:150px"></label></div></section>
+</section>
 </div>
 <div>
-<div class="sum"><b id="grand">0</b><span id="gsub"></span></div>
+<div class="sum"><b id="grand">0</b><span id="gsub"></span><div class="seg" id="seg"></div><div class="legend" id="segl"></div><div class="row" style="margin-top:12px"><button id="rst" class="s">New</button><button id="save">Save revision</button><button class="s" id="csv">Export CSV</button><button class="s" id="json">Export JSON</button><button class="s" id="bk">Backup vault</button>
+<label class="s" style="flex-direction:row;align-items:center;gap:6px;cursor:pointer;color:var(--ink)">Restore<input type="file" id="imp" accept=".json" style="max-width:150px"></label></div></div>
 <section><h2>Software BOM</h2><div class="wrap"><table id="tsw"></table></div></section>
 <section><h2>Hardware BOM</h2><div class="wrap"><table id="thw"></table></div></section>
 <section><h2>Engineering man-hours</h2><div class="wrap"><table id="tmh"></table></div></section>
 <section><h2>Cost summary and risk</h2><div class="wrap"><table id="tsm"></table></div></section>
+<section><h2>Commercial summary and taxes</h2><div class="g">
+<label>AVEVA Customer FIRST support<select id="sla"><option value="0">None</option><option value="0.15">Standard 15%</option><option value="0.18">Gold 18%</option></select></label>
+<label>Margin / discount %<input type="number" id="mgn" value="0" step="0.5"></label>
+<label>UAE VAT<select id="vat"><option value="1">5% included</option><option value="0">Off</option></select></label></div>
+<div class="wrap" style="margin-top:10px"><table id="tcm"></table></div></section>
 <section><h2>Saved revisions</h2><div class="wrap"><table id="trv"></table></div></section>
 <section id="storage"><h2>Storage health</h2><div class="bar"><i id="sb" style="width:0"></i></div><p class="mut" id="st">Checking…</p></section>
 </div></main>
@@ -80,7 +87,7 @@
 <div class="row" style="margin:10px 0"><button id="sadd">Add entry</button><select id="sfl"><option value="">All projects</option></select><select id="sfs"><option value="">All statuses</option><option>Open</option><option>Answered</option><option>Closed</option></select></div>
 <div class="wrap"><table id="tst"></table></div></section></div></main>
 <main id="v-rc" hidden style="grid-template-columns:1fr"><div>
-<section><h2>Master rate cards (AED)</h2><p class="mut">Edits apply to every new calculation and are written to the audit trail.</p><div class="wrap"><table id="trc"></table></div></section>
+<section><h2>Master rate cards (AED)</h2><p class="mut">Edits apply to every new calculation and are written to the audit trail.</p><div class="rcg"><div class="wrap"><table id="trc"></table></div><div class="wrap"><table id="trc2"></table></div></div></section>
 <section><h2>Audit trail</h2><div class="wrap"><table id="tau"></table></div></section></div></main>
 <button id="upd">Update available. Click to reload</button>
 <script src="js/db.js"></script>
